@@ -1,0 +1,2146 @@
+The error shows that you can’t use the keyword match as the function
+identifier. To use match as a function name, you need to use the raw identifier syntax, like this:
+src/main.rs
+
+fn r#match(needle: &str, haystack: &str) -> bool {
+haystack.contains(needle)
+}
+fn main() {
+assert!(r#match("foo", "foobar"));
+}
+
+This code will compile without any errors. Note the r# prefix on the function name in its definition as well as where the function is called in main.
+Raw identifiers allow you to use any word you choose as an identifier,
+even if that word happens to be a reserved keyword. In addition, raw identifiers allow you to use libraries written in a different Rust edition than your
+crate uses. For example, try isn’t a keyword in the 2015 edition but is in
+the 2018 edition. If you depend on a library that’s written using the 2015
+edition and has a try function, you’ll need to use the raw identifier syntax,
+r#try in this case, to call that function from your 2018 edition code. See
+Appendix E for more information on editions.
+
+B
+
+OPE R ATORS A ND SY MBOL S
+
+This appendix contains a glossary of Rust’s
+syntax, including operators and other symbols that appear by themselves or in the context of paths, generics, trait bounds, macros,
+attributes, comments, tuples, and brackets.
+Operators
+Table B-1 contains the operators in Rust, an example of how the operator
+would appear in context, a short explanation, and whether that operator
+is overloadable. If an operator is overloadable, the relevant trait to use to
+overload that operator is listed.
+
+Table B-1: Operators
+
+Operator
+
+Example
+
+Explanation
+
+!
+
+ident!(...), ident!{...}, ident![...]
+
+Macro expansion
+
+!
+
+!expr
+
+Bitwise or logical complement
+
+Not
+
+!=
+
+var != expr
+
+Nonequality comparison
+
+PartialEq
+
+%
+
+expr % expr
+
+Arithmetic remainder
+
+Rem
+
+%=
+
+var %= expr
+
+Arithmetic remainder and
+assignment
+
+RemAssign
+
+&
+
+&expr, &mut expr
+
+Borrow
+
+&
+
+&type, &mut type, &'a type, &'a mut type
+
+Borrowed pointer type
+
+&
+
+expr & expr
+
+Bitwise AND
+
+BitAnd
+
+&=
+
+var &= expr
+
+Bitwise AND and assignment
+
+BitAndAssign
+
+&&
+
+expr && expr
+
+Logical AND
+
+*
+
+expr * expr
+
+Arithmetic multiplication
+
+Mul
+
+*=
+
+var *= expr
+
+Arithmetic multiplication and
+assignment
+
+MulAssign
+
+*
+
+*expr
+
+Dereference
+
+*
+
+*const type, *mut type
+
+Raw pointer
+
++
+
+trait + trait, 'a + trait
+
+Compound type constraint
+
++
+
+expr + expr
+
+Arithmetic addition
+
+Add
+
++=
+
+var += expr
+
+Arithmetic addition and
+assignment
+
+AddAssign
+
+,
+
+expr, expr
+
+Argument and element separator
+
+-
+
+- expr
+
+Arithmetic negation
+
+Neg
+
+-
+
+expr - expr
+
+Arithmetic subtraction
+
+Sub
+
+-=
+
+var -= expr
+
+Arithmetic subtraction and
+assignment
+
+SubAssign
+
+->
+
+fn(...) -> type, |...| -> type
+
+Function and closure return type
+
+.
+
+expr.ident
+
+Member access
+
+..
+
+.., expr.., ..expr, expr..expr
+
+Right-exclusive range literal
+
+..=
+
+..=expr, expr..=expr
+
+Right-inclusive range literal
+
+..
+
+..expr
+
+Struct literal update syntax
+
+..
+
+variant(x, ..), struct_type { x, .. }
+
+“And the rest” pattern binding
+
+...
+
+expr...expr
+
+In a pattern: inclusive range
+pattern
+
+/
+
+expr / expr
+
+Arithmetic division
+
+Div
+
+/=
+
+var /= expr
+
+Arithmetic division and
+assignment
+
+DivAssign
+
+:
+
+pat: type, ident: type
+
+Constraints
+
+:
+
+ident: expr
+
+Struct field initializer
+
+:
+
+'a: loop {...}
+
+Loop label
+
+500
+
+Appendix B
+
+Overloadable?
+
+Operator
+
+Example
+
+Explanation
+
+Overloadable?
+
+;
+
+expr;
+
+Statement and item terminator
+
+;
+
+[...; len]
+
+Part of fixed-size array syntax
+
+<<
+
+expr << expr
+
+Left-shift
+
+Shl
+
+<<=
+
+var <<= expr
+
+Left-shift and assignment
+
+ShlAssign
+
+<
+
+expr < expr
+
+Less than comparison
+
+PartialOrd
+
+<=
+
+expr <= expr
+
+Less than or equal to comparison
+
+PartialOrd
+
+=
+
+var = expr, ident = type
+
+Assignment/equivalence
+
+==
+
+expr == expr
+
+Equality comparison
+
+=>
+
+pat => expr
+
+Part of match arm syntax
+
+>
+
+expr > expr
+
+Greater than comparison
+
+PartialOrd
+
+>=
+
+expr >= expr
+
+Greater than or equal to
+comparison
+
+PartialOrd
+
+>>
+
+expr >> expr
+
+Right-shift
+
+Shr
+
+>>=
+
+var >>= expr
+
+Right-shift and assignment
+
+ShrAssign
+
+@
+
+ident @ pat
+
+Pattern binding
+
+^
+
+expr ^ expr
+
+Bitwise exclusive OR
+
+BitXor
+
+^=
+
+var ^= expr
+
+Bitwise exclusive OR and
+assignment
+
+BitXorAssign
+
+|
+
+pat | pat
+
+Pattern alternatives
+
+|
+
+expr | expr
+
+Bitwise OR
+
+BitOr
+
+|=
+
+var |= expr
+
+Bitwise OR and assignment
+
+BitOrAssign
+
+||
+
+expr || expr
+
+Logical OR
+
+?
+
+expr?
+
+Error propagation
+
+PartialEq
+
+Non-operator Symbols
+The following tables contain all non-letters that don’t function as operators;
+that is, they don’t behave like a function or method call.
+Table B-2 shows symbols that appear on their own and are valid in a
+variety of locations.
+Table B-2: Stand-Alone Syntax
+
+Symbol
+
+Explanation
+
+'ident
+
+Named lifetime or loop label
+
+...u8, ...i32, ...f64,
+...usize, etc.
+
+Numeric literal of specific type
+
+"..."
+
+String literal
+(continued)
+
+Operators and Symbols
+
+501
+
+Table B-2: (continued)
+
+Symbol
+
+Explanation
+
+r"...", r#"..."#,
+r##"..."##, etc.
+
+Raw string literal; escape characters not processed
+
+b"..."
+
+Byte string literal; constructs a [u8] instead of a string
+
+br"...", br#"..."#,
+br##"..."##, etc.
+
+Raw byte string literal; combination of raw and byte string literal
+
+'...'
+
+Character literal
+
+b'...'
+
+ASCII byte literal
+
+|...| expr
+
+Closure
+
+!
+
+Always empty bottom type for diverging functions
+
+_
+
+“Ignored” pattern binding; also used to make integer literals
+readable
+
+Table B-3 shows symbols that appear in the context of a path through
+the module hierarchy to an item.
+Table B-3: Path-Related Syntax
+
+Symbol
+
+Explanation
+
+ident::ident
+
+Namespace path
+
+::path
+
+Path relative to the crate root (i.e., an explicitly
+absolute path)
+
+self::path
+
+Path relative to the current module (i.e., an explicitly relative path)
+
+super::path
+
+Path relative to the parent of the current module
+
+type::ident,
+<type as trait>::ident
+
+Associated constants, functions, and types
+
+<type>::...
+
+Associated item for a type that cannot be directly
+named (e.g., <&T>::..., <[T]>::..., etc.)
+
+trait::method(...)
+
+Disambiguating a method call by naming the trait
+that defines it
+
+type::method(...)
+
+Disambiguating a method call by naming the type
+for which it’s defined
+
+<type as trait>::method(...)
+
+Disambiguating a method call by naming the trait
+and type
+
+Table B-4 shows symbols that appear in the context of using generic
+type parameters.
+
+502
+
+Appendix B
+
+Table B-4: Generics
+
+Symbol
+
+Explanation
+
+path<...>
+
+Specifies parameters to generic type in a type (e.g., Vec<u8>)
+
+path::<...>,
+method::<...>
+
+Specifies parameters to generic type, function, or method
+in an expression; often referred to as turbofish (e.g., "42"
+.parse::<i32>())
+
+fn ident<...> ...
+
+Define generic function
+
+struct ident<...> ...
+
+Define generic structure
+
+enum ident<...> ...
+
+Define generic enumeration
+
+impl<...> ...
+
+Define generic implementation
+
+for<...> type
+
+Higher-ranked lifetime bounds
+
+type<ident=type>
+
+A generic type where one or more associated types have
+specific assignments (e.g., Iterator<Item=T>)
+
+Table B-5 shows symbols that appear in the context of constraining
+generic type parameters with trait bounds.
+Table B-5: Trait-Bound Constraints
+
+Symbol
+
+Explanation
+
+T: U
+
+Generic parameter T constrained to types that implement U
+
+T: 'a
+
+Generic type T must outlive lifetime 'a (meaning the type cannot transitively contain any references with lifetimes shorter than 'a)
+
+T : 'static
+
+Generic type T contains no borrowed references other than 'static ones
+
+'b: 'a
+
+Generic lifetime 'b must outlive lifetime 'a
+
+T: ?Sized
+
+Allow generic type parameter to be a dynamically sized type
+
+'a + trait,
+trait + trait
+
+Compound type constraint
+
+Table B-6 shows symbols that appear in the context of calling or defining macros and specifying attributes on an item.
+Table B-6: Macros and Attributes
+
+Symbol
+
+Explanation
+
+#[meta]
+
+Outer attribute
+
+#![meta]
+
+Inner attribute
+
+$ident
+
+Macro substitution
+
+$ident:kind
+
+Macro capture
+
+$(...)...
+
+Macro repetition
+
+Operators and Symbols
+
+503
+
+Table B-7 shows symbols that create comments.
+Table B-7: Comments
+
+Symbol
+
+Explanation
+
+//
+
+Line comment
+
+//!
+
+Inner line doc comment
+
+///
+
+Outer line doc comment
+
+/*...*/
+
+Block comment
+
+/*!...*/
+
+Inner block doc comment
+
+/**...*/
+
+Outer block doc comment
+
+Table B-8 shows symbols that appear in the context of using tuples.
+Table B-8: Tuples
+
+Symbol
+
+Explanation
+
+()
+
+Empty tuple (aka unit), both literal and type
+
+(expr)
+
+Parenthesized expression
+
+(expr,)
+
+Single-element tuple expression
+
+(type,)
+
+Single-element tuple type
+
+(expr, ...)
+
+Tuple expression
+
+(type, ...)
+
+Tuple type
+
+expr(expr, ...)
+
+Function call expression; also used to initialize tuple structs and tuple enum variants
+
+ident!(...), ident!{...}, ident![...]
+
+Macro invocation
+
+expr.0, expr.1, etc.
+
+Tuple indexing
+
+Table B-9 shows the contexts in which curly brackets are used.
+Table B-9: Curly Brackets
+
+504
+
+Appendix B
+
+Context
+
+Explanation
+
+{...}
+
+Block expression
+
+Type {...}
+
+struct literal
+
+Table B-10 shows the contexts in which square brackets are used.
+Table B-10: Square Brackets
+
+Context
+
+Explanation
+
+[...]
+
+Array literal
+
+[expr; len]
+
+Array literal containing len copies of expr
+
+[type; len]
+
+Array type containing len instances of type
+
+expr[expr]
+
+Collection indexing; overloadable (Index, IndexMut)
+
+expr[..], expr[a..],
+expr[..b], expr[a..b]
+
+Collection indexing pretending to be collection slicing,
+using Range, RangeFrom, RangeTo, or RangeFull as the “index”
+
+Operators and Symbols
+
+505
+
+C
+
+DERIVABLE TR AITS
+
+In various places in the book, we’ve discussed the derive attribute, which you can
+apply to a struct or enum definition. The
+derive attribute generates code that will implement a trait with its own default implementation on
+the type you’ve annotated with the derive syntax.
+In this appendix, we provide a reference of all the traits in the standard
+library that you can use with derive. Each section covers:
+•
+•
+•
+•
+•
+
+What operators and methods deriving this trait will enable
+What the implementation of the trait provided by derive does
+What implementing the trait signifies about the type
+The conditions in which you’re allowed or not allowed to implement
+the trait
+Examples of operations that require the trait
+
+If you want different behavior than that provided by the derive attribute, consult the standard library documentation for each trait for details
+on how to manually implement them.
+The rest of the traits defined in the standard library can’t be implemented on your types using derive. These traits don’t have sensible default
+behavior, so it’s up to you to implement them in the way that makes sense
+for what you’re trying to accomplish.
+An example of a trait that can’t be derived is Display, which handles
+formatting for end users. You should always consider the appropriate way
+to display a type to an end user. What parts of the type should an end user
+be allowed to see? What parts would they find relevant? What format of the
+data would be most relevant to them? The Rust compiler doesn’t have this
+insight, so it can’t provide appropriate default behavior for you.
+The list of derivable traits provided in this appendix is not comprehensive: libraries can implement derive for their own traits, making the list of
+traits you can use derive with truly open-ended. Implementing derive involves
+using a procedural macro, which is covered in “Macros” on page 446.
+
+Debug for Programmer Output
+The Debug trait enables debug formatting in format strings, which you indicate by adding :? within {} placeholders.
+The Debug trait allows you to print instances of a type for debugging
+purposes, so you and other programmers using your type can inspect an
+instance at a particular point in a program’s execution.
+The Debug trait is required, for example, in use of the assert_eq! macro.
+This macro prints the values of instances given as arguments if the equality
+assertion fails so programmers can see why the two instances weren’t equal.
+
+PartialEq and Eq for Equality Comparisons
+The PartialEq trait allows you to compare instances of a type to check for
+equality and enables use of the == and != operators.
+Deriving PartialEq implements the eq method. When PartialEq is
+derived on structs, two instances are equal only if all fields are equal, and
+the instances are not equal if any fields are not equal. When derived on
+enums, each variant is equal to itself and not equal to the other variants.
+The PartialEq trait is required, for example, with the use of the assert_eq!
+macro, which needs to be able to compare two instances of a type for equality.
+The Eq trait has no methods. Its purpose is to signal that for every value
+of the annotated type, the value is equal to itself. The Eq trait can only be
+applied to types that also implement PartialEq, although not all types that
+implement PartialEq can implement Eq. One example of this is floating point
+number types: the implementation of floating point numbers states that two
+instances of the not-a-number (NaN) value are not equal to each other.
+An example of when Eq is required is for keys in a HashMap<K,V> so the
+HashMap<K,V> can tell whether two keys are the same.
+508
+
+Appendix C
+
+PartialOrd and Ord for Ordering Comparisons
+The PartialOrd trait allows you to compare instances of a type for sorting
+purposes. A type that implements PartialOrd can be used with the <, >, <=,
+and >= operators. You can only apply the PartialOrd trait to types that also
+implement PartialEq.
+Deriving PartialOrd implements the partial_cmp method, which returns
+an Option<Ordering> that will be None when the values given don’t produce an
+ordering. An example of a value that doesn’t produce an ordering, even
+though most values of that type can be compared, is the not-a-number (NaN)
+floating point value. Calling partial_cmp with any floating point number and
+the NaN floating point value will return None.
+When derived on structs, PartialOrd compares two instances by comparing the value in each field in the order in which the fields appear
+in the struct definition. When derived on enums, variants of the enum
+declared earlier in the enum definition are considered less than the variants listed later.
+The PartialOrd trait is required, for example, for the gen_range method
+from the rand crate that generates a random value in the range specified by
+a low value and a high value.
+The Ord trait allows you to know that for any two values of the annotated
+type, a valid ordering will exist. The Ord trait implements the cmp method,
+which returns an Ordering rather than an Option<Ordering> because a valid
+ordering will always be possible. You can only apply the Ord trait to types
+that also implement PartialOrd and Eq (and Eq requires PartialEq). When
+derived on structs and enums, cmp behaves the same way as the derived
+implementation for partial_cmp does with PartialOrd.
+An example of when Ord is required is when storing values in a BTreeSet<T>,
+a data structure that stores data based on the sort order of the values.
+
+Clone and Copy for Duplicating Values
+The Clone trait allows you to explicitly create a deep copy of a value, and the
+duplication process might involve running arbitrary code and copying heap
+data. See “Ways That Variables and Data Interact: Clone” on page 67 for
+more information on Clone.
+Deriving Clone implements the clone method, which when implemented
+for the whole type, calls clone on each of the parts of the type. This means
+all the fields or values in the type must also implement Clone to derive Clone.
+An example of when Clone is required is when calling the to_vec method
+on a slice. The slice doesn’t own the type instances it contains, but the vector
+returned from to_vec will need to own its instances, so to_vec calls clone on
+each item. Thus, the type stored in the slice must implement Clone.
+The Copy trait allows you to duplicate a value by only copying bits stored
+on the stack; no arbitrary code is necessary. See “Stack-Only Data: Copy” on
+page 67 for more information on Copy.
+
+Derivable Traits
+
+509
+
+The Copy trait doesn’t define any methods to prevent programmers from
+overloading those methods and violating the assumption that no arbitrary
+code is being run. That way, all programmers can assume that copying a
+value will be very fast.
+You can derive Copy on any type whose parts all implement Copy. You can
+only apply the Copy trait to types that also implement Clone, because a type
+that implements Copy has a trivial implementation of Clone that performs the
+same task as Copy.
+The Copy trait is rarely required; types that implement Copy have optimizations available, meaning you don’t have to call clone, which makes the
+code more concise.
+Everything possible with Copy you can also accomplish with Clone, but
+the code might be slower or have to use clone in places.
+
+Hash for Mapping a Value to a Value of Fixed Size
+The Hash trait allows you to take an instance of a type of arbitrary size and
+map that instance to a value of fixed size using a hash function. Deriving
+Hash implements the hash method. The derived implementation of the hash
+method combines the result of calling hash on each of the parts of the type,
+meaning all fields or values must also implement Hash to derive Hash.
+An example of when Hash is required is in storing keys in a HashMap<K,V>
+to store data efficiently.
+
+Default for Default Values
+The Default trait allows you to create a default value for a type. Deriving
+Default implements the default function. The derived implementation of the
+default function calls the default function on each part of the type, meaning
+all fields or values in the type must also implement Default to derive Default.
+The Default::default function is commonly used in combination with
+the struct update syntax discussed in “Creating Instances from Other
+Instances with Struct Update Syntax” on page 86. You can customize a
+few fields of a struct and then set and use a default value for the rest of the
+fields by using ..Default::default().
+The Default trait is required when you use the method unwrap_or_default
+on Option<T> instances, for example. If the Option<T> is None, the method
+unwrap_or_default will return the result of Default::default for the type T
+stored in the Option<T>.
+
+510
+
+Appendix C
+
+D
+
+USEFUL DE VELOPMENT TOOL S
+
+In this appendix, we talk about some useful development tools that the Rust project
+provides. We’ll look at automatic formatting,
+quick ways to apply warning fixes, a linter, and
+integrating with IDEs.
+Automatic Formatting with rustfmt
+The rustfmt tool reformats your code according to the community code style.
+Many collaborative projects use rustfmt to prevent arguments about which
+style to use when writing Rust: everyone formats their code using the tool.
+To install rustfmt, enter the following:
+$ rustup component add rustfmt
+
+This command gives you rustfmt and cargo-fmt, similar to how Rust gives
+you both rustc and cargo. To format any Cargo project, enter the following:
+$ cargo fmt
+
+Running this command reformats all the Rust code in the current
+crate. This should only change the code style, not the code semantics. For
+more information on rustfmt, see its documentation at https://github.com/
+rust-lang/rustfmt/.
+
+Fix Your Code with rustfix
+The rustfix tool is included with Rust installations and can automatically
+fix some compiler warnings. If you’ve written code in Rust, you’ve probably
+seen compiler warnings. For example, consider this code:
+src/main.rs
+
+fn do_something() {}
+fn main() {
+for i in 0..100 {
+do_something();
+}
+}
+
+Here, we’re calling the do_something function 100 times, but we never use
+the variable i in the body of the for loop. Rust warns us about that:
+$ cargo build
+Compiling myprogram v0.1.0 (file:///projects/myprogram)
+warning: unused variable: `i`
+--> src/main.rs:4:9
+|
+4 |
+for i in 1..100 {
+|
+^ help: consider using `_i` instead
+|
+= note: #[warn(unused_variables)] on by default
+Finished dev [unoptimized + debuginfo] target(s) in 0.50s
+
+The warning suggests that we use _i as a name instead: the underscore
+indicates that we intend for this variable to be unused. We can automatically apply that suggestion using the rustfix tool by running the command
+cargo fix:
+$ cargo fix
+Checking myprogram v0.1.0 (file:///projects/myprogram)
+Fixing src/main.rs (1 fix)
+Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+
+512
+
+Appendix D
+
+When we look at src/main.rs again, we’ll see that cargo fix has changed
+the code:
+src/main.rs
+
+fn do_something() {}
+fn main() {
+for _i in 0..100 {
+do_something();
+}
+}
+
+The for loop variable is now named _i, and the warning no longer
+appears.
+You can also use the cargo fix command to transition your code
+between different Rust editions. Editions are covered in Appendix E.
+
+More Lints with Clippy
+The Clippy tool is a collection of lints to analyze your code so you can catch
+common mistakes and improve your Rust code.
+To install Clippy, enter the following:
+$ rustup component add clippy
+
+To run Clippy’s lints on any Cargo project, enter the following:
+$ cargo clippy
+
+For example, say you write a program that uses an approximation of a
+mathematical constant, such as pi, as this program does:
+src/main.rs
+
+fn main() {
+let x = 3.1415;
+let r = 8.0;
+println!("the area of the circle is {}", x * r * r);
+}
+
+Running cargo clippy on this project results in this error:
+error: approximate value of `f{32, 64}::consts::PI` found. Consider using it
+directly
+--> src/main.rs:2:13
+|
+2 |
+let x = 3.1415;
+|
+^^^^^^
+|
+= note: #[deny(clippy::approx_constant)] on by default
+= help: for further information visit https://rust-lang-nursery.github.io/
+rust-clippy/master/index.html#approx_constant
+
+Useful Development Tools
+
+513
+
+This error lets you know that Rust has this constant defined more precisely and that your program would be more correct if you used the constant instead. You would then change your code to use the PI constant. The
+following code doesn’t result in any errors or warnings from Clippy:
+src/main.rs
+
+fn main() {
+let x = std::f64::consts::PI;
+let r = 8.0;
+println!("the area of the circle is {}", x * r * r);
+}
+
+For more information on Clippy, see its documentation at https://github
+.com/rust-lang/rust-clippy/.
+
+IDE Integration Using the Rust Language Server
+To help IDE integration, the Rust project distributes the Rust Language
+Server (rls). This tool speaks the Language Server Protocol described at
+http://langserver.org/, which is a specification for IDEs and programming
+languages to communicate with each other. Different clients can use the
+rls, such as the Rust plug-in for Visual Studio Code available from https://
+marketplace.visualstudio.com/items?itemName=rust-lang.rust.
+To install the rls, enter the following:
+$ rustup component add rls
+
+Then install the language server support in your particular IDE; you’ll
+gain abilities such as autocompletion, jump to definition, and inline errors.
+For more information on the rls, see its documentation at https://github
+.com/rust-lang/rls/.
+
+514
+
+Appendix D
+
+E
+
+EDITIONS
+
+In Chapter 1, you saw that cargo new adds a
+bit of metadata to your Cargo.toml file about
+an edition. This appendix talks about what
+that means!
+The Rust language and compiler have a six-week release cycle, meaning
+users get a constant stream of new features. Other programming languages
+release larger changes less often; Rust releases smaller updates more frequently. After a while, all of these tiny changes add up. But from release
+to release, it can be difficult to look back and say, “Wow, between Rust 1.10
+and Rust 1.31, Rust has changed a lot!”
+Every two or three years, the Rust team produces a new Rust edition.
+Each edition brings together the features that have landed into a clear
+package with fully updated documentation and tooling. New editions ship
+as part of the usual six-week release process.
+
+Editions serve different purposes for different people:
+•
+•
+•
+
+For active Rust users, a new edition brings together incremental
+changes into an easy-to-understand package.
+For non-users, a new edition signals that some major advancements
+have landed, which might make Rust worth another look.
+For those developing Rust, a new edition provides a rallying point for
+the project as a whole.
+
+At the time of this writing, two Rust editions are available: Rust 2015
+and Rust 2018. This book is written using Rust 2018 edition idioms.
+The edition key in Cargo.toml indicates which edition the compiler
+should use for your code. If the key doesn’t exist, Rust uses 2015 as the edition value for backward-compatibility reasons.
+Each project can opt in to an edition other than the default 2015 edition.
+Editions can contain incompatible changes, such as including a new keyword
+that conflicts with identifiers in code. However, unless you opt in to those
+changes, your code will continue to compile even as you upgrade the Rust
+compiler version you use.
+All Rust compiler versions support any edition that existed prior to
+that compiler’s release, and they can link crates of any supported editions
+together. Edition changes only affect the way the compiler initially parses
+code. Therefore, if you’re using Rust 2015 and one of your dependencies
+uses Rust 2018, your project will compile and be able to use that dependency. The opposite situation, where your project uses Rust 2018 and a
+dependency uses Rust 2015, works as well.
+To be clear: most features will be available on all editions. Developers
+using any Rust edition will continue to see improvements as new stable
+releases are made. However, in some cases, mainly when new keywords are
+added, some new features might only be available in later editions. You will
+need to switch editions if you want to take advantage of such features.
+For more details, the Edition Guide at https://doc.rust-lang.org/stable/
+edition-guide/ is a complete book about editions that enumerates the differences between editions and explains how to automatically upgrade your
+code to a new edition via cargo fix.
+
+516
+
+Appendix E
+
+INDEX
+
+Symbols and Numbers
++ (addition operator), 39, 139–140, 500
+& (ampersand), 17, 500
+<> (angle brackets), 502–503
+
+for specifying lifetime
+parameters, 197
+for specifying type parameters, 132,
+176, 177
+-> (arrow), 47–48, 500
+* (asterisk), 500
+dereference operator, 70,
+317–321, 420
+glob operator, 127
+multiplication operator, 39
+@ (at operator), 415–416, 501
+: (colon), 500, 503
+for struct fields, 84
+for trait bounds, 187
+{} (curly brackets), 504
+for function bodies, 5, 15
+as placeholders in the println!
+macro, 18
+scope creation, 46, 73
+/ (division operator), 39, 500
+. (dot), 500
+for method syntax, 93
+for struct field access, 84
+for tuple element access, 41
+:: (double colon), 502
+for associated functions, 96
+for enum variants, 98
+for namespacing, 115
+" (double quote), 39, 501
+- (hyphen)
+for negation, 500
+for subtraction, 39, 500
++ (multiple trait bound syntax), 187, 500
+! (never type), 440–441, 502
+() (parentheses), 504
+for function parameters, 5, 15
+for tuples, 40–41
+? (question mark operator), 162–164, 501
+
+% (remainder operator), 39, 500
+; (semicolon), 6, 42, 501
+' (single quote), 501–502
+
+for characters, 39
+for lifetime parameter names, 196
+[] (square brackets), 505
+for array creation, 41
+in the array type, 42
+for element access, 42–43, 133–135
+_ (underscore), 502
+as a catchall pattern, 28, 108–109,
+409–411
+as a visual separator in integer
+literals, 37
+| (vertical pipe), 501–502
+in closure definitions, 267
+in patterns, 404
+1:1 threading model, 349
+2015 edition. See editions
+2018 edition. See editions
+
+A
+ABI (application binary interface), 424
+abort, 152
+absolute path, 115–116, 119
+addition
+of custom types, 429–430
+of number types, 39
+of strings, 139–140
+addition operator (+), 39, 139–140, 500
+ahead-of-time compiled, 7
+ampersand (&), 17, 500
+ancestor modules, 117
+angle brackets (<>), 502–503
+for specifying lifetime
+parameters, 197
+for specifying type parameters, 132,
+176, 177
+API (Application Programming
+Interface), xxviii, 4
+application binary interface (ABI), 424
+Arc<T> type, 367–368, 480–481
+
+arguments, 44
+arms
+in if expressions, 50
+in match expressions, 23–24, 105
+array data type, 41–43
+invalid element access, 42–43
+iterating over elements of, 56–57
+slices of, 81
+arrow (->), 47–48, 500
+as_bytes method, 76
+as keyword, 124
+assert_eq! macro, 214–216
+assert! macro, 211–214
+assert_ne! macro, 216
+associated function, 16, 95–96
+associated types, 427–428
+associative array. See HashMap<K, V> type
+asterisk (*), 500
+dereference operator, 70,
+317–321, 420
+glob operator, 127
+multiplication operator, 39
+atomically reference counted, 367–368
+at operator (@), 415–416, 501
+attribute-like procedural macros,
+454–455
+automatic dereferencing, 94
+automatic referencing, 94
+
+B
+back of house, 114
+backtrace, 153–155
+binary crate, 19, 111–113, 239
+binary target, 308
+blanket implementations, 192
+blocking, 351
+Boolean data type, 39, 51
+borrow checker, 194–196, 197
+borrowing, 70–75
+Box<T> type, 312–317
+break keyword, 27, 54–55
+buffer overread, 153
+Build Tools for Visual Studio, 3
+byte literal syntax, 37, 76, 502
+
+C
+Cargo, xxvi, 7–11
+commands
+build, 9, 10
+check, 10
+518
+
+Index
+
+clippy, 513–514
+doc, 22, 293–294, 296
+fix, 512–513, 516
+fmt, 511–512
+install, 308–309
+login, 300
+new, 8, 14
+publish, 300–302
+run, 9–10, 305
+test, 208–211, 221–227, 295,
+
+306–308
+update, 21
+yank, 302
+
+extending with custom
+commands, 309
+workspaces, 303–308
+Cargo.lock, 9, 20–21
+Cargo.toml, 19–21, 112–113
+dependencies section, 8, 19
+package section, 8, 300–301
+profile section, 292–293
+updating crate versions in, 21
+carriage return, 462
+cfg (configuration) attribute, 227–228
+channels, 355–361, 478–483
+character data type, 39–40
+child modules, 115, 117
+client, 458
+Clippy, 513–514
+clone method
+deep copy creation, 67
+trade-offs of, 242
+Clone trait, 509–510
+closed channel, 356
+closures, 264–276
+capturing the environment with,
+274–276, 280–281
+returning, 445
+running in threads, 350
+type inference in, 269–270
+cmp method, 23–24
+coherence, 184
+collections, 131–149
+collect method, 145, 235
+colon (:), 500
+for struct fields, 84
+for trait bounds, 187
+command line arguments, accepting,
+234–237
+command line notation, 2
+comments, 49, 293–296, 475
+compiler-driven development, 469
+
+compiling
+with cargo, 7–11
+in release mode, 10
+with rustc, 6–7
+compound data types, 40–43
+concurrency, 347–370
+concurrent programming, 347
+configuration (cfg) attribute, 228
+connection, 458–462
+cons list, 314–317
+constants, 34
+vs. static variables, 425–426
+vs. variables, 34
+constructor, 325
+*const T, 419–421, 500
+consume, 278–279
+consuming adaptors, 278–279
+continue keyword, 28
+contracts, 166
+control flow, 49–57
+Copy trait, 67, 190–191, 509–510
+crate, 8, 112–113
+binary vs. library, 19
+license of, 300–301
+publishing, 301–302
+updating versions, 21
+using as a dependency, 19–21,
+125–126
+yanking, 302
+crate keyword, 115–116
+crate root, 112, 115, 127
+crates.io, 293–302
+publishing to, 301–302
+removing from, 302
+setting up an account on, 300
+CRLF sequence, 462
+CTRL -C, 26, 54, 460, 487
+curly brackets ({}), 504
+for function bodies, 5, 15
+as placeholders in the println!
+macro, 18
+scope creation, 46, 73
+custom derive procedural macros,
+449–454
+
+D
+dangling pointer, 74
+dangling reference, 74–75, 193–195,
+199–200
+data race, 73, 425-426
+
+data types, 36–43
+annotation of, 25, 36
+compound, 40–43
+scalar, 36–40
+deadlock, 349, 368, 491
+Debug trait, 91–92, 508
+declarative macros, 446–448
+deep copy, 66–67, 509
+Default trait, 510
+default type parameters, 429–430
+dependencies section in Cargo.toml, 8, 19
+dependency, 7, 8, 19–20
+deref coercion, 140, 321–323
+DerefMut trait, 322–323
+Deref trait, 317–323, 437
+derive annotation, 91–92, 449–454,
+507–510
+destructor, 325
+destructuring
+of enums, 406–407, 408
+of nested items, 408
+of structs, 405–406, 408, 409
+of tuples, 40–41, 398–400, 409
+Dickinson, Emily, 237
+dictionary. See HashMap<K, V> type
+Dijkstra, Edsger W., 207
+Display trait, 91, 191–192, 205, 434–437
+diverging functions, 440
+division operator (/), 39, 500
+doc tests, 295
+documentation
+comments, 293–296, 475
+offline for Rust, 4
+tests, 295
+viewing a crate’s, 22
+writing, 293–296
+dot (.), 500
+for method syntax, 93
+for struct field access, 84
+for tuple element access, 41
+double colon (::), 502
+for associated functions, 96
+for enum variants, 98
+for namespacing, 115
+double free error, 65, 325
+double quote ("), 39, 501
+Doyle, Sir Arthur Conan, 287
+drop function, 64, 323–326
+Drop trait, 323–326, 487–489
+dynamically sized type (DST), 441–443
+dynamic dispatch, 380
+dyn keyword, 247, 376
+Index
+
+519
+
+E
+editions, xxi–xxii, 8, 498, 513, 515–516
+else if expression, 51–52
+else keyword, 50
+empty type, 440–441, 502
+encapsulation, 112, 372–374
+entry method, 147–149
+Entry type, 147–149
+enumerate method, 76, 398–399
+enums, 97–104
+defining, 98–101
+instantiating, 98
+making public, 120–121
+variants of, 98
+environment, 274–276
+environment variables, 255–260
+eprintln! macro, 261–262
+Eq trait, 508
+error handling, 151–169
+executable file, 6–7
+executing code, 6–7
+exit status code, 245–246
+expect method, 17–18, 25, 159–160
+expressions, 45–47
+extern functions, 424–425
+
+F
+fearless concurrency, 348
+FFI (Foreign Function Interface), 424
+field init shorthand, 85
+fields, 84
+files, 237–238
+floating-point data types, 39
+fn keyword, 15
+FnMut trait, 271, 275–276, 443, 473
+FnOnce trait, 271, 275–276, 443, 473
+Fn trait, 271, 275–276, 443, 473
+fn type, 443–445
+Foreign Function Interface (FFI), 424
+for keyword
+loop, 56–57
+in trait implementations, 183–184
+format! macro, 139–140
+from function
+on the From trait, 162
+on String, 62–63, 138
+front of house, 114
+fully qualified syntax, 431–434, 439
+functional programming, 263–264
+function-like procedural macros, 455
+function pointers, 443–445
+520
+
+Index
+
+functions, 43–48
+arguments to, 44
+bodies, statements and expressions
+in, 45–47
+with multiple return values using a
+tuple, 69–70
+parameters of, 44–45
+public vs. private, 117–119
+returning early from, 47
+with return values, 47–48
+
+G
+Gallant, Andrew, 234
+Gamma, Erich, 372
+garbage collector (GC), 60, 63
+generics, 171–182, 205
+default types for, 429–430
+in enum definitions, 178–179
+in function definitions, 174–177
+in method definitions, 179–181
+performance of, 181–182
+in struct definitions, 177–178
+get method
+on HashMap<K, V>, 146
+on Vec<T>, 133–134
+getter, 168
+Git, 8, 11
+global variables, 425–426
+grapheme clusters, 142–143, 144
+green threads, 349
+grep, 233–234
+guarding, 362
+guessing game, 13–30
+
+H
+hash. See HashMap<K, V> type
+hasher, 149
+hashing function, 144, 149
+hash map. See HashMap<K, V> type
+HashMap<K, V> type, 144–149
+entry method on, 147–148
+get method on, 146
+insert method on, 144–146
+iterating over, 146–147
+new function on, 144–145
+hash table. See HashMap<K, V> type
+Hash trait, 510
+heap
+allocating on, 60–61, 312–313
+and the stack, 60–61
+Helm, Richard, 372
+
+Hoare, Tony, 102
+HTTP (Hypertext Transfer Protocol),
+458, 462–464
+hyphen (-)
+for negation, 500
+for subtraction, 39, 500
+
+I
+IDE (Integrated Development
+Environment), xxvi, 4, 514
+if keyword, 49–53
+if let syntax, 109–110
+ignore attribute, 226–227
+immutability, See mutability
+impl keyword
+for defining associated functions,
+95–96
+for defining methods, 92–94
+for implementing traits, 183–186
+impl Trait syntax, 186–187, 188–189
+indexing syntax, 133–135
+indirection, 316–317
+inheritance, 374–375
+input lifetimes, 202
+input/output (io) library, 15
+installation of Rust, 1–4
+instance, 16, 84
+integer data types, 36–38
+numeric operations with, 39
+signed, 36–37
+type suffixes of, 37
+unsigned, 36–37
+integer overflow, 38
+Integrated Development Environment
+(IDE), xxvi, 4, 514
+integration tests, 228–232
+interfaces. See traits
+interior mutability, 330–336, 338, 368
+invalidated variable, 66
+io (input/output) library, 15
+IpAddr type, 99–100
+irrefutable patterns, 401–402
+isize type
+architecture dependent size of, 37
+indexing collection with, 38
+iterator adaptors, 279–281, 286–287
+iterators, 276–289
+creating with iter method, 76
+enumerate method on, 76
+next method on, 281–283
+performance of, 287–289
+iter method, 76
+
+J
+Johnson, Ralph, 372
+JoinHandle type, 351
+
+K
+Kay, Alan, 371
+keywords, 32, 495–498
+
+L
+Language Server Protocol, 514
+last in, first out ordering, 60
+lazy evaluation, 270, 276, 279
+len method, 76
+let keyword, 15–16
+library crate, 7, 19, 111–113
+license, 300–301
+license identifier value, 301
+lifetimes, 192–205
+annotation of, 196–204
+elision, 201–203
+line feed, 462
+linker, 2–3
+lints, 513–514
+Linux installation of Rust, 2–3
+Little Book of Rust Macros, The, 448
+lock, 363–365
+loop keyword, 26–27, 54–55
+
+M
+macOS installation of Rust, 2–3
+macro_export annotation, 447
+macro_rules! macro, 446–448
+macros, 446–455
+declarative, 446–448
+procedural, 449–455
+main function, 5, 164
+mangling, 425
+map. See HashMap<K, V> type
+match expression, 104–109
+exhaustiveness of, 108
+handling comparison results with,
+23–24
+handling error values with, 158
+handling Result values with, 28
+match guard, 413–415
+memoization, 270
+memory leak, 339, 345
+message passing, 355–361
+metaprogramming, 446
+Index
+
+521
+
+methods
+defined on enums, 101
+defined on structs, 92–95
+method syntax, 93
+M:N threading model, 349
+mock object, 332–336
+mod keyword, 113–115
+modules, 112, 113–120, 127–128
+moving to other files, 127–128
+root, 115–116
+module system, 112
+module tree, 115
+monomorphization, 181–182
+move keyword, 275–276, 353–355
+moving ownership, 64–66
+vs. borrowing, 70–75
+with function calls, 68
+with function return values, 68–70
+multiple producer, single consumer
+(mpsc), 356, 360, 480
+multiple trait bound syntax (+), 187, 500
+multiplication, 39
+mutability
+of references, 72–74
+of variables, 32–33
+Mutex<T> type, 362–368, 480–481, 486
+mut keyword
+making a reference mutable with,
+72–74
+making a variable mutable with, 33
+*mut T, 419–421, 500
+mutual exclusion, 362
+
+N
+namespace, 63, 96, 98, 113
+nested path, 126–127
+never type (!), 440–441, 502
+new function
+on HashMap<K, V>, 144–145
+on String, 137–138
+on Vec<T>, 132
+new project setup, using cargo, 14
+newtype pattern, 436–438
+null, 101–104
+numeric operations, 39
+
+O
+object, 372, 376. See also
+HashMap<K, V> type
+
+522
+
+Index
+
+object-oriented programming (OOP),
+371–393
+object-safe traits, 380–381, 389
+operator overloading, 429–430
+operators, 499–501
+optimizations, 10
+Option<T> enum, 101–104
+Ordering type, 23–24
+Ord trait, 509
+orphan rule, 184, 436
+output lifetimes, 202
+overflow of integers, 38
+ownership, 59–81
+and functions, 68–70
+rules, 61
+
+P
+package, 112–113
+package section in Cargo.toml, 8,
+300–301
+panicking, 38
+panic! macro, 152–155, 164–169
+parallel programming, 347
+parameters, 44–45
+parentheses, (()), 504
+for function parameters, 5, 15
+for tuples, 40–41
+parent modules, 115, 117
+parse method, 25
+PartialEq trait, 508
+PartialOrd trait, 509
+paths, 112, 113, 115–127
+absolute, 115–116, 119
+nested, 126–127
+relative, 115–116, 119–120
+PATH system variable, 2, 3, 308–309
+patterns, 395–416
+binding to values with, 106–107
+in for loops, 398–399
+in function parameters, 400
+in if let syntax, 109–110, 396–397
+in let statements, 399–400
+in match expressions, 104–107, 396
+refutable vs. irrefutable, 401–402
+in while let syntax, 398
+.pdb file extension, 7
+pointer, 60, 311
+dangling, 74
+to data on the heap, 60–61
+raw, 419–420
+smart, 311–346
+
+poisoned mutex, 483
+polymorphism, 374
+prelude, 15, 127
+primitive obsession, 241
+println! macro, 6, 18
+privacy, 114, 117
+privacy boundary, 117
+privacy rules, 117
+private, 112, 114, 117, 228
+struct fields, 120–121
+procedural macros, 449–455
+attribute-like, 454–455
+custom derive, 449–454
+function-like, 455
+process, 348
+proc_macro crate, 449
+profiles, 292–293
+profile section in Cargo.toml, 292–293
+propagating errors, 160–164
+pub keyword, 116, 117–119
+public, 112, 114
+API, 116, 296–299
+making items, 117–119
+making structs and enums, 120–121
+pub use, 124–125, 296–299
+push method, 132–133, 139
+push_str method, 63, 139
+
+Q
+question mark operator (?),
+162–164, 501
+quote crate, 451–454
+
+R
+race conditions, 73, 349
+RAII (Resource Acquisition Is
+Initialization), 64
+rand crate, 19–23
+random number functionality, 19,
+21–23
+Range type, 57
+raw identifiers, 497–498
+raw pointers, 419–421
+Rc<T> type, 326–330, 337–345
+read_line method, 15–18
+receiver, 356
+recoverable errors, 151, 155–164
+recursive types, 314–317
+re-export, 124–125, 296–299
+RefCell<T> type, 330–345
+
+reference counting, 312, 326–330,
+366–368
+reference cycles, 339–345
+references
+for accessing data from multiple
+places, 17
+and borrowing, 70–75
+dangling, 74–75
+dereferencing, 70
+mutability of, 72–74, 75
+rules of, 75
+refutable patterns, 401–402
+registry, 20, 293–302
+relative path, 115–116, 119–120
+release mode, 10, 38
+release profiles, 292–293
+remainder operator (%), 39, 500
+request line, 462
+request-response protocol, 458
+Resource Acquisition Is Initialization
+(RAII), 64
+Result<T, E> type, 17–18, 155–164
+expect method on, 17–18, 25,
+159–160
+vs. panic!, 164–169
+in tests, 221
+type aliases for, 439–440
+unwrap method on, 159–160
+unwrap_or_else method on, 159,
+245–246, 248
+return keyword, 47
+return values
+of functions, 47–48
+multiple using a tuple, 69–70
+rev method, 57
+ripgrep, 234, 308–309
+RLS (Rust Language Server), xxvi, 514
+root module, 115–116
+.rs file extension, 5
+running code, 5, 6–7, 9–10
+runtime, 349
+Rustaceans, 3–4
+rustc, 3, 5, 6–7
+rustfix, 512–513
+rustfmt, xxvi, 6, 511–512
+Rust Language Server (RLS), xxvi, 514
+Rustonomicon, The, 135, 346, 369
+rustup commands, 1–4
+doc, 4
+uninstall, 3
+update, 3
+
+Index
+
+523
+
+S
+scalar data types, 36–40, 67–68
+scope, 62, 112, 113
+SCREAMING_SNAKE_CASE, 425
+Self keyword, 380–381
+self module, 115, 122, 127
+self parameter, 92
+Semantic Versioning (SemVer),
+19–20, 302
+semicolon (;), 6, 42, 501
+Send trait, 368–369, 427, 473
+sequence, 57
+server, 458
+shadowing, 25, 34–36
+shallow copy, 66
+shared-state concurrency, 361–368
+should_panic attribute, 218–221
+sibling modules, 115
+signed integer types, 36–37
+single quote ('), 501–502
+for characters, 39
+for lifetime parameter
+names, 196
+?Sized, 442–443
+Sized trait, 441–443, 445
+slice type, 75–81
+of array, 81
+string slices, 77–80
+smart pointer, 311–346
+snake case, 43
+Software Package Data Exchange
+(SPDX), 301
+square brackets ([]), 505
+for array creation, 41
+in the array type, 42
+for element access, 42–43,
+133–135
+stack
+and the heap, 60–61
+last in, first out ordering, 60
+popping off of, 60
+pushing onto, 60
+standard error (stderr), 260–262
+standard output (stdout), 260–262
+statements, 45–47
+state objects, 382
+state pattern, 382–393
+statically typed, 36
+static dispatch, 380
+
+524
+
+Index
+
+'static lifetime, 204, 425, 473
+
+static method, 16, 95–96
+static variables, 425–426
+status line, 463
+stderr (standard error), 260–262
+stdin function, 16
+stdout (standard output), 260–262
+&str (string slice type), 77–80
+stream, 459–461
+stringify! macro, 454
+string literal, 62
+storage in the binary of, 63
+of string slice type, 80–81
+string slice type (&str), 77–80
+String type, 62–63, 137–144
+as_bytes method on, 76
+bytes method on, 143–144
+chars method on, 143
+concatenation with +, 139–140
+from function on, 62–63, 140
+indexing into, 141–142
+internal structure of, 64–65,
+141–142
+iterating over, 143–144
+len method on, 76
+new function on, 137–138
+parse method on, 25
+push method on, 139
+push_str method on, 63, 139
+slicing, 142–143
+trim method on, 25
+UTF-8 encoding of, 137
+Stroustrup, Bjarne, 288
+structs, 83–96
+defining, 83–84
+field init shorthand, 85
+fields, 84
+instantiating, 84–85
+making public, 120–121
+ownership of data, 87–88
+tuple, 86–87, 436–437
+unit-like, 87
+update syntax, 86
+subtraction, 39
+super keyword, 115, 119–120
+supertraits, 434–436
+symbols, 501–505
+syn crate, 451–453
+Sync trait, 368–369, 427
+
+T
+TCP (Transmission Control Protocol),
+458–460
+test attribute, 208–209
+test double, 332
+test-driven development (TDD), 250
+test functions, 208–211
+tests, 207–232
+custom failure messages for,
+216–217
+filtering, 224–226
+ignoring, 226–227
+integration, 228–232
+organizing, 227–232
+of private functions, 228
+running, 221–227
+unit, 227–228
+using Result<T, E> in, 221
+writing, 208–221
+thread pool, 469–493
+threads, 348–355
+creating with spawn, 350, 470–473
+joining, 351
+pausing with sleep, 350
+thunk, 438–439
+Tom’s Obvious, Minimal Language
+(TOML), 8
+to_string method, 138, 192
+trait bounds, 187–192, 205
+conditionally implementing
+methods with, 191–192
+fixing the largest function with,
+189–191
+trait objects, 375–381, 445
+dynamic dispatch, 380
+object safety, 380–381
+traits, 182–192
+associated types in, 427–428
+default implementations of, 185–186
+defining, 182–183
+implementing, 183–184
+unsafe, 426–427
+Transmission Control Protocol (TCP),
+458–460
+transmitter, 356
+trim method, 25
+tuple data type, 40–41, 69–70
+tuple structs, 86–87, 436–437, 444–445
+two’s complement wrapping, 38
+type alias, 438–440, 481–482
+
+type annotation, 25, 36
+type inference, 24
+type suffixes, 37
+
+U
+underscore (_), 502
+as a catchall pattern, 28, 108–109,
+409–411
+as a visual separator in integer
+literals, 37
+Unicode Scalar Value, 40, 141–144
+Uniform Resource Identifier (URI), 462
+Uniform Resource Locator (URL), 462
+unit-like structs, 87
+unit tests, 227–228
+unrecoverable errors, 152–155
+unrolling, 288–289
+unsafe, 418–427
+functions, 421–424
+superpowers, 418–419, 427
+traits, 426–427
+unsigned integer types, 36–37
+unsized type, 441–443
+unwinding, 152
+unwrap method, 159–160
+unwrap_or_else method, 245–246
+URI (Uniform Resource Identifier), 462
+URL (Uniform Resource Locator), 462
+use keyword, 22, 112, 121–127
+and as, 124
+and external packages, 125–126
+and the glob operator, 127
+and nested paths, 126–127
+and pub, 124–125
+user input, 15
+usize type
+architecture dependent size of, 37
+indexing collection with, 38
+UTF-8 encoding, 137, 141–142
+
+V
+variables
+vs. constants, 34
+global, 425–426
+mutability, 32–33
+shadowing, 25, 34–36
+static, 425–426
+storing values in, 15–16
+
+Index
+
+525
+
+variants, 98
+vec! macro, 132
+vector. See Vec<T> type.
+Vec<T> type, 132–136
+get method on, 133–135
+iterating over, 135–136
+new function on, 132
+push method on, 132–133
+vertical pipe (|), 501–502
+in closure definitions, 267
+in patterns, 404
+Visual Studio, 3
+Visual Studio Code, 514
+Vlissides, John, 372
+
+W
+warnings, 512–513
+weak reference, 341–342
+Weak<T> type, 341–345
+where clause, 188
+while loop, 55–56
+Windows installation of Rust, 3
+workspaces, 303–308
+Wrapping type, 38
+
+Y
+yanking, 302
+
+Z
+zero-cost abstractions, xxvii, 288–289
+zero-overhead, 288
+
+526
+
+Index
+
+The Rust Programming Language is set in New Baskerville, Futura, Dogma, and
+TheSansMono Condensed.
+
+
