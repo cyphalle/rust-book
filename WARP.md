@@ -8,9 +8,13 @@ This is a learning repository for working through "The Rust Programming Language
 
 ## Repository Structure
 
-- Organized into `chap_*` directories (currently chap_1 and chap_2)
-- Each chapter contains individual Rust projects
-- Mix of standalone `.rs` files (like `chap_1/hello_world/main.rs`) and full Cargo projects (like `chap_1/hello_cargo` and `chap_2/guessing_game`)
+- Organized into `chap_1` through `chap_20` directories, plus `appendices/`
+- Each chapter directory contains:
+  - `chapter.txt` - Full chapter text extracted from the book
+  - `README.md` - Chapter overview and notes
+  - Subdirectories for code exercises and Cargo projects
+- Mix of standalone `.rs` files and full Cargo projects
+- The `chapters/` directory contains documentation (INDEX.md and README.md) for quick reference
 
 ## Common Commands
 
